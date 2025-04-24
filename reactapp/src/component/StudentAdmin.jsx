@@ -7,7 +7,7 @@ function StudentAdmin() {
         const sid=e.target.sid.value;
     //alert("hiiiii"+sid);
 if(sid=='*'){
-    const response=await fetch("http://localhost:3005/admin/show");
+    const response=await fetch("https://teststudentmernapp-backend.onrender.com/admin/show");
             const res=await response.json();
             console.log(res.msg);
             setStudentData(res.msg);

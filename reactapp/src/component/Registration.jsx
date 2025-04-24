@@ -8,7 +8,7 @@ function Registration() {
      const password=e.target.password.value;
      //alert(name+email+password);
 
-        const response=await fetch("http://localhost:3005/register",{
+        const response=await fetch("https://teststudentmernapp-backend.onrender.com/register",{
             method:"POST",
             body:JSON.stringify({name,email,password}),
             headers:{'Content-Type':'application/json'}
