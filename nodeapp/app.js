@@ -83,34 +83,57 @@ res.json({msg:sdata})
 
 app.get("/admin/showByEmailId/:email",async (req,res)=>{
     try{
-    let arr=[];
+    //let arr=[];
     const emailid=req.params.email;
-    //console.log(emailid);
-    const data=await fs.readFile('student.json',{encoding:'utf-8'});
-    arr=JSON.parse(data);
-    const result=arr.find(ele=>ele.email==emailid)
-    if(!result){
+    const data=await student.findOne({email:emailid});
+    if(!data){
         res.json({msg:"email id not found in database"})
+    }else{
+    res.json({msg:data});
     }
-        res.json({msg:result});
-    }catch(err){
+    //console.log(emailid);
+    // const data=await fs.readFile('student.json',{encoding:'utf-8'});
+    // arr=JSON.parse(data);
+    // const result=arr.find(ele=>ele.email==emailid)
+    // if(!result){
+    //     res.json({msg:"email id not found in database"})
+    // }
+    //     res.json({msg:result});
+    
+     }catch(err){
         res.status(500).json({msg:err.message})
-    }
+     }
 })
 
 app.delete("/admin/deleteByEmailId/:email",async(req,res)=>{
 const emailid=req.params.email;
 console.log(emailid)
-let arr=[];
-           const data=await fs.readFile('student.json',{encoding:'utf-8'});
-           arr=JSON.parse(data);
-           const index=arr.findIndex(ele=>ele.email==emailid);
-           if(index==-1){
-            res.json({msg:"emaild is not found in database"})
-           }
-           arr.splice(index,1);
-           await fs.writeFile('student.json',JSON.stringify(arr,null,2));
-           res.json({msg:"data deleted successfully!!!"})
+const data=await student.deleteOne({email:emailid})
+if(data.deletedCount==0){
+    res.json({msg:"Data could not delete"})
+}
+res.json({msg:"Data deleted successfully!!!"})
+// let arr=[];
+//            const data=await fs.readFile('student.json',{encoding:'utf-8'});
+//            arr=JSON.parse(data);
+//            const index=arr.findIndex(ele=>ele.email==emailid);
+//            if(index==-1){
+//             res.json({msg:"emaild is not found in database"})
+//            }
+//            arr.splice(index,1);
+//            await fs.writeFile('student.json',JSON.stringify(arr,null,2));
+//            res.json({msg:"data deleted successfully!!!"})
+
+})
+
+app.patch("/admin/updateByEmailId/:email",async(req,res)=>{
+    const emailid=req.params.email;
+    const {name,password}=req.body;
+   const data= await student.updateOne({email:emailid},{$set:{name:name,password:password}});
+   if(data.matchedCount==0){
+    return res.status(404).send({ msg: "Student not found." });
+   } 
+   res.json({msg:"data updated successfully!!!"});
 })
 
 app.listen(port,()=>{
