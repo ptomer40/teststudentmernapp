@@ -1,6 +1,9 @@
 const express=require('express');
 const cors=require('cors');
 const fs=require('fs').promises;
+const dbconn=require('./database/dbConn')
+const student=require('./model/student')
+dbconn();
 const app=express();
 const port=3005;
 app.use(express.json());
@@ -15,23 +18,25 @@ app.post("/msg",(req,res)=>{
 
 app.post("/register",async(req,res)=>{
     let arr=[];
-const {name,email,password}=req.body;
-const data1=await fs.readFile('student.json',{encoding:'utf-8'});
-                arr=JSON.parse(data1);
+const studentdata=req.body;
+await student.create(studentdata);
+res.json({msg:"Registration done successfully!!!"});
+//const data1=await fs.readFile('student.json',{encoding:'utf-8'});
+                //arr=JSON.parse(data1);
 
-                const result=arr.find(ele=>ele.email==email);
-               console.log(result);
-               if(result){
-                console.log("Inside statue true");
+                //const result=arr.find(ele=>ele.email==email);
+               //console.log(result);
+        //        if(result){
+        //         console.log("Inside statue true");
                 
-                return res.json({msg:"Email is already registerd"})
-               }
-         else{
-               arr.push({name,email,password});
-               console.log(arr);
-           await fs.writeFile('student.json',JSON.stringify(arr,null,2));
-           res.json({msg:"Registration done successfully!!!"});
-         }
+        //         return res.json({msg:"Email is already registerd"})
+        //        }
+        //  else{
+        //        arr.push({name,email,password});
+        //        console.log(arr);
+        //    await fs.writeFile('student.json',JSON.stringify(arr,null,2));
+        //    res.json({msg:"Registration done successfully!!!"});
+        //  }
 
 })
 
@@ -40,25 +45,37 @@ app.post("/login",async(req,res)=>{
 let arr=[];
     const {email,password}=req.body;
     console.log(email+password);
-    const data1=await fs.readFile('student.json',{encoding:'utf-8'});
-       arr=JSON.parse(data1);
-       const result=arr.find(ele=>ele.email==email && ele.password==password);
-       if(result){
-        
+  const studentData=await student.findOne({email:email});
+  console.log(studentData)
+  if(!studentData){
+    res.json({msg:"user is not registered"});
+  }else{
+    if(studentData.password==password){
         res.json({msg:"success"});
-       }
-       else{
+    }else{
+        res.json({msg:"password is incorrect"}); 
+    }
+  }
+    // const data1=await fs.readFile('student.json',{encoding:'utf-8'});
+    //    arr=JSON.parse(data1);
+    //    const result=arr.find(ele=>ele.email==email && ele.password==password);
+    //    if(result){
         
-        res.json({msg:"user is invalid, email or password is incorrect"});
-       }
+    //     res.json({msg:"success"});
+    //    }
+    //    else{
+        
+    //     res.json({msg:"user is invalid, email or password is incorrect"});
+    //    }
 
 
 })
 app.get("/admin/show",async(req,res)=>{
     try{
-const data=await fs.readFile('student.json',{encoding:'utf-8'});
-      const sdata= JSON.parse(data);
-      res.json({msg:sdata})
+// const data=await fs.readFile('student.json',{encoding:'utf-8'});
+//       const sdata= JSON.parse(data);
+    const sdata= await student.find();
+res.json({msg:sdata})
     }catch(err){
         res.json({msg:err.message})
     }
