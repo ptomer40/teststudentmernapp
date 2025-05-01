@@ -128,8 +128,8 @@ res.json({msg:"Data deleted successfully!!!"})
 
 app.patch("/admin/updateByEmailId/:email",async(req,res)=>{
     const emailid=req.params.email;
-    const {name,password}=req.body;
-   const data= await student.updateOne({email:emailid},{$set:{name:name,password:password}});
+    const {name}=req.body;
+   const data= await student.updateOne({email:emailid},{$set:{name:name}});
    if(data.matchedCount==0){
     return res.status(404).send({ msg: "Student not found." });
    } 
