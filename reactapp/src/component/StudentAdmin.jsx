@@ -29,8 +29,12 @@ const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admi
     alert(res.msg);
 
 }
-function updateStudent(){
-
+async function updateStudent(email){
+    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/updateByEmailId/${email}`,{
+        method:'PATCH'
+    });
+        const res=await response.json();
+        alert(res.msg);
 }
   return (
    <div>
