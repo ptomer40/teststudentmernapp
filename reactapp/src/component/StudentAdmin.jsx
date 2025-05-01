@@ -13,7 +13,7 @@ if(sid=='*'){
             setStudentData(res.msg);
 }
 else{
-    const response=await fetch(`http://localhost:3005/admin/showByEmailId/${sid}`);
+    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/showByEmailId/${sid}`);
     const res=await response.json();
     console.log(res.msg);
     setStudentData(Array.isArray(res.msg)?res.msg:[res.msg]);
@@ -22,7 +22,7 @@ else{
 
 async function deleteStudent(email){
 //alert(email);
-const response=await fetch(`http://localhost:3005/admin/deleteByEmailId/${email}`,{
+const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/deleteByEmailId/${email}`,{
     method:'DELETE'
 });
     const res=await response.json();
