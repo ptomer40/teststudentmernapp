@@ -30,8 +30,12 @@ const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admi
 
 }
 async function updateStudent(email){
+    alert('inside update');
+    const newName=prompt('Enter Name to update');
     const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/updateByEmailId/${email}`,{
-        method:'PATCH'
+        method:'PATCH',
+        body:JSON.stringify({newName}),
+        headers:{'content-type':'application/json'}
     });
         const res=await response.json();
         alert(res.msg);
