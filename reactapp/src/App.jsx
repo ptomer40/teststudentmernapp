@@ -8,6 +8,8 @@ import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './component/Home'
 import Dashboard from './component/Dashboard'
 import StudentAdmin from './component/StudentAdmin'
+import StudentDashboard from './component/StudentDashboard'
+import TeacherDashboard from './component/TeacherDashboard'
 
 function App() {
 
@@ -19,8 +21,10 @@ function App() {
    <Route path='/login' element={<Login />} />
    <Route path='/register' element={<Registration />} />
   </Route>
-  <Route path='/dashboard' element={<Dashboard />} />
-  <Route path='/studentadmin' element={<StudentAdmin />} />
+  <Route path='/studentdashboard' element={<StudentDashboard />} />
+  <Route path='/admindashboard' element={<StudentAdmin />} />
+  <Route path='/teacherdashboard' element={<TeacherDashboard />} />
+  
    </Routes>
    </BrowserRouter>
   )

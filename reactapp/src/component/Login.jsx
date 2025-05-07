@@ -15,11 +15,15 @@ function Login() {
        })
       const res= await response.json();
       alert(res.msg);
-      if(res.msg=="success"){
-      navigate('/dashboard');
-      }
+      if(res.msg=="success" && res.user.role=="student"){
 
-   
+      navigate('/studentdashboard');
+      }
+      else if(res.msg=="success" && res.user.role=="admin"){
+        navigate('/admindashboard');
+      }
+      else if(res.msg=="success" && res.user.role=="teacher"){
+        navigate('/teacherdashboard');
    }
   
   return (
