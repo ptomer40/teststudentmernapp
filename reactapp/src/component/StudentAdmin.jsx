@@ -7,13 +7,13 @@ function StudentAdmin() {
         const sid=e.target.sid.value;
     //alert("hiiiii"+sid);
 if(sid=='*'){
-    const response=await fetch("https://teststudentmernapp-backend.onrender.com/admin/show");
+    const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/admin/show");
             const res=await response.json();
             console.log(res.msg);
             setStudentData(res.msg);
 }
 else{
-    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/showByEmailId/${sid}`);
+    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/showByEmailId/${sid}`);
     const res=await response.json();
     console.log(res.msg);
     setStudentData(Array.isArray(res.msg)?res.msg:[res.msg]);
@@ -22,7 +22,7 @@ else{
 
 async function deleteStudent(email){
 //alert(email);
-const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/deleteByEmailId/${email}`,{
+const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/deleteByEmailId/${email}`,{
     method:'DELETE'
 });
     const res=await response.json();
@@ -33,7 +33,7 @@ async function updateStudent(email){
     alert('inside update');
     const newName=prompt('Enter Name to update');
    //https://teststudentmernapp-backend.onrender.com
-    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/admin/updateByEmailId/${email}`,{
+    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/updateByEmailId/${email}`,{
         method:'PATCH',
         body:JSON.stringify({newName}),
         headers:{'content-type':'application/json'}

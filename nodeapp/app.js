@@ -3,6 +3,14 @@ const cors=require('cors');
 const fs=require('fs').promises;
 const dbconn=require('./database/dbConn')
 const student=require('./model/student')
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const router = express.Router();
+require('dotenv').config();
+const attendanceRoutes = require('./routes/attendanceRoutes');
+const loginnregistrationRoutes=require('./routes/loginnregistrationRoutes');
+const adminRoute=require('./routes/adminRoute');
+
 dbconn();
 const app=express();
 const port=3005;
@@ -15,129 +23,13 @@ res.send("Welcome to Express Framework Server");
 app.post("/msg",(req,res)=>{
     res.send("Hii, Hitting the /msg api");
 })
-
-app.post("/register",async(req,res)=>{
-    let arr=[];
-const studentdata=req.body;
-await student.create(studentdata);
-res.json({msg:"Registration done successfully!!!"});
-//const data1=await fs.readFile('student.json',{encoding:'utf-8'});
-                //arr=JSON.parse(data1);
-
-                //const result=arr.find(ele=>ele.email==email);
-               //console.log(result);
-        //        if(result){
-        //         console.log("Inside statue true");
-                
-        //         return res.json({msg:"Email is already registerd"})
-        //        }
-        //  else{
-        //        arr.push({name,email,password});
-        //        console.log(arr);
-        //    await fs.writeFile('student.json',JSON.stringify(arr,null,2));
-        //    res.json({msg:"Registration done successfully!!!"});
-        //  }
-
-})
+app.use('/api', attendanceRoutes);
+app.use('/api',loginnregistrationRoutes);
+app.use('/api',adminRoute);
 
 
-app.post("/login",async(req,res)=>{
-let arr=[];
-    const {email,password}=req.body;
-    console.log(email+password);
-  const studentData=await student.findOne({email:email});
-  console.log(studentData)
-  if(!studentData){
-    res.json({msg:"user is not registered"});
-  }else{
-    if(studentData.password==password){
-        res.json({msg:"success"});
-    }else{
-        res.json({msg:"password is incorrect"}); 
-    }
-  }
-    // const data1=await fs.readFile('student.json',{encoding:'utf-8'});
-    //    arr=JSON.parse(data1);
-    //    const result=arr.find(ele=>ele.email==email && ele.password==password);
-    //    if(result){
-        
-    //     res.json({msg:"success"});
-    //    }
-    //    else{
-        
-    //     res.json({msg:"user is invalid, email or password is incorrect"});
-    //    }
 
 
-})
-app.get("/admin/show",async(req,res)=>{
-    try{
-// const data=await fs.readFile('student.json',{encoding:'utf-8'});
-//       const sdata= JSON.parse(data);
-    const sdata= await student.find();
-res.json({msg:sdata})
-    }catch(err){
-        res.json({msg:err.message})
-    }
-})
-
-app.get("/admin/showByEmailId/:email",async (req,res)=>{
-    try{
-    //let arr=[];
-    const emailid=req.params.email;
-    const data=await student.findOne({email:emailid});
-    if(!data){
-        res.json({msg:"email id not found in database"})
-    }else{
-    res.json({msg:data});
-    }
-    //console.log(emailid);
-    // const data=await fs.readFile('student.json',{encoding:'utf-8'});
-    // arr=JSON.parse(data);
-    // const result=arr.find(ele=>ele.email==emailid)
-    // if(!result){
-    //     res.json({msg:"email id not found in database"})
-    // }
-    //     res.json({msg:result});
-    
-     }catch(err){
-        res.status(500).json({msg:err.message})
-     }
-})
-
-app.delete("/admin/deleteByEmailId/:email",async(req,res)=>{
-const emailid=req.params.email;
-console.log(emailid)
-const data=await student.deleteOne({email:emailid})
-if(data.deletedCount==0){
-    res.json({msg:"Data could not delete"})
-}
-res.json({msg:"Data deleted successfully!!!"})
-// let arr=[];
-//            const data=await fs.readFile('student.json',{encoding:'utf-8'});
-//            arr=JSON.parse(data);
-//            const index=arr.findIndex(ele=>ele.email==emailid);
-//            if(index==-1){
-//             res.json({msg:"emaild is not found in database"})
-//            }
-//            arr.splice(index,1);
-//            await fs.writeFile('student.json',JSON.stringify(arr,null,2));
-//            res.json({msg:"data deleted successfully!!!"})
-
-})
-
-app.patch("/admin/updateByEmailId/:email",async(req,res)=>{
-    console.log('inside update')
-   
-    const emailid=req.params.email;
-    const {newName}=req.body;
-    console.log(newName)
-   const data= await student.updateOne({email:emailid},{$set:{name:newName}});
-   if(data.matchedCount==0){
-    return res.status(404).send({ msg: "Student not found." });
-   } 
-   res.json({msg:"data updated successfully!!!"});
-})
 
 app.listen(port,()=>{
     console.log("Express srver is running on::"+port)
