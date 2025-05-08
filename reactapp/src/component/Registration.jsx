@@ -6,11 +6,15 @@ function Registration() {
      const name=e.target.name.value;
      const email=e.target.email.value;
      const password=e.target.password.value;
-     //alert(name+email+password);
+     const sid=e.target.sid.value;
+     const branch=e.target.branch.value;
+     const section=e.target.section.value;
+
+     alert(sid+branch+section+name+email+password);
 
         const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/register",{
             method:"POST",
-            body:JSON.stringify({name,email,password}),
+            body:JSON.stringify({name,email,password,sid,branch,section}),
             headers:{'Content-Type':'application/json'}
         })
         const res=await response.json();
@@ -20,14 +24,43 @@ function Registration() {
 
 
 
-    <div><h2 style={{backgroundColor:'#03f4fc'}}>Registration</h2>
+    <div className='container mt-5'>
+      <div className='card shadow p-4'>
+      <h2 style={{backgroundColor:'#03f4fc'}}>Registration</h2>
+      </div>
+      
         <div>
         <form onSubmit={sendData}>
+        <div class="form-group">
+    <label for="id">your id(admission number)</label>
+    <input type="text" name="sid" required class="form-control" id="exampleInputname" aria-describedby="admission" placeholder="Enter admission number" />
+   
+  </div>
         <div class="form-group">
     <label for="exampleInputEmail1">Name</label>
     <input type="text" name="name" required class="form-control" id="exampleInputname" aria-describedby="emailHelp" placeholder="Enter name" />
    
   </div>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Branch</label>
+   <select name='branch'>
+    <option>CSE</option>
+    <option>CS</option>
+    <option>IT</option>
+   </select>
+   
+  </div>
+
+  <div class="form-group">
+    <label for="exampleInputEmail1">Section</label>
+   <select name='section'>
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+   </select>
+   
+  </div>
+  
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
     <input type="email" name="email" required class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />

@@ -25,10 +25,10 @@ function Login() {
       else if(res.msg=="success" && res.user.role=="teacher"){
         navigate('/teacherdashboard');
    }
-  
+  }
   return (
-    <div>
-  <h2 style={{backgroundColor:'#03f4fc'}}>Login</h2>
+    <div style={{height:'400px'}} >
+  <h2 style={{backgroundColor:'#4d2234',color:'white'}}>Login</h2>
       
         <form onSubmit={sendData}>
       
@@ -42,7 +42,7 @@ function Login() {
     <input type="password" name="password" required class="form-control" id="exampleInputPassword1" placeholder="Password" />
   </div>
  
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary" style={{marginTop:'20px'}}>Submit</button>
 </form>
 
         </div>

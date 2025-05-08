@@ -9,13 +9,18 @@ const student=require('../model/student')
 
 router.post("/register",async(req,res)=>{
     try{
-  const {name,email,password,role}=req.body;
+  const {sid,branch,section,name,email,password,role}=req.body;
+  console.log(sid,branch,section,name,email,password,role);
+
   const existingUser = await student.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ msg: "User already exists with this email." });
   }
    const hashedPassword=await bcrypt.hash(password,10);
   const newUser= await student.create({
+      sid,
+      branch,
+      section,
       name,
       email,
       password:hashedPassword,
