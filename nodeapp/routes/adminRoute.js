@@ -6,12 +6,29 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const router = express.Router();
 const student=require('../model/student')
+const verifyToken = require('../middleware/authMiddleware')
+const authorizeRoles = require('../middleware/roleMiddleware');
 
 
-router.get("/admin/show",async(req,res)=>{
+//protected route to access admin
+router.get("/admin/validate",verifyToken,authorizeRoles('admin'), async(req,res,next)=>{
+try{
+     console.log("Inside /addmin/validate backend");
+    res.status(200).json({ msg: "Authorized" });
+    
+}catch(err){
+ res.status(403).json({ success: false, msg: "Access Denied" });
+}
+})
+
+
+router.get("/admin/show",verifyToken,authorizeRoles('admin'),async(req,res)=>{
     try{
-
+     console.log("")
     const sdata= await student.find();
+    if (!sdata || sdata.length === 0) {
+        return res.status(404).json({ msg: 'No students found' });
+      }
 res.json({msg:sdata})
     }catch(err){
         res.json({msg:err.message})

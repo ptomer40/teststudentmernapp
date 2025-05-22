@@ -8,22 +8,68 @@ function Login() {
        const email=e.target.email.value;
        const password=e.target.password.value;
        //alert(email+password);
-       const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/login",{
+      //  const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/login",{
+      //   method:"POST",
+      //   body:JSON.stringify({email,password}),
+      //   headers:{'Content-Type':'application/json'}
+      //  })
+      const response=await fetch("http://localhost:3005/api/login",{
         method:"POST",
         body:JSON.stringify({email,password}),
         headers:{'Content-Type':'application/json'}
        })
       const res= await response.json();
-      alert(res.msg);
+      
+      
       if(res.msg=="success" && res.user.role=="student"){
+        
+        localStorage.setItem("token", res.token);  
+       localStorage.setItem("user", JSON.stringify(res.user));
+       
+       const vresponse=await fetch("http://localhost:3005/api/student/validate",{
+        method:"GET",
+        headers:{'Content-Type':'application/json', "authorization":`Bearer ${res.token}`}
+       })
+       console.log("After / student validate at react")
 
-      navigate('/studentdashboard');
+      const vres= await vresponse.json();
+      console.log(vres);
+      if(vres.msg=='Authorized'){
+       navigate('/studentdashboard');
       }
+      else{
+        console.log("Inside student else Authorized")
+        alert(vres.msg)
+      }
+
+         
+      }
+      
       else if(res.msg=="success" && res.user.role=="admin"){
-        navigate('/admindashboard');
+       //console.log(res.token);
+       localStorage.setItem("token", res.token);  
+       localStorage.setItem("user", JSON.stringify(res.user));
+       
+       const vresponse=await fetch("http://localhost:3005/api/admin/validate",{
+        method:"GET",
+        headers:{'Content-Type':'application/json', "authorization":`Bearer ${res.token}`}
+       })
+       console.log("After /validate at react")
+
+      const vres= await vresponse.json();
+      console.log(vres);
+      if(vres.msg=='Authorized'){
+       navigate('/admindashboard');
       }
-      else if(res.msg=="success" && res.user.role=="teacher"){
+      else{
+        console.log("Inside else Authorized")
+        alert("hoooo:"+vres.msg)
+      }
+      }
+      else if(res.msg=="success" && res.user.role=="teacher") {
         navigate('/teacherdashboard');
+   }else{
+    alert(res.msg);
    }
   }
   return (

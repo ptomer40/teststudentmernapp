@@ -10,6 +10,7 @@ require('dotenv').config();
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const loginnregistrationRoutes=require('./routes/loginnregistrationRoutes');
 const adminRoute=require('./routes/adminRoute');
+const studentRouting=require('./routes/studentRouting');
 
 dbconn();
 const app=express();
@@ -26,6 +27,7 @@ app.post("/msg",(req,res)=>{
 app.use('/api', attendanceRoutes);
 app.use('/api',loginnregistrationRoutes);
 app.use('/api',adminRoute);
+app.use('/api',studentRouting);
 
 
 

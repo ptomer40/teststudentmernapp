@@ -2,18 +2,37 @@ import React, { useState } from 'react'
 
 function StudentAdmin() {
     const [studentData,setStudentData]=useState([]);
+    const token = localStorage.getItem("token");
+      if(!token){
+        return alert("Not a valid user to access this resource or no valid token ");
+      }
     async function showData(e){
         e.preventDefault();
         const sid=e.target.sid.value;
     //alert("hiiiii"+sid);
 if(sid=='*'){
-    const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/admin/show");
-            const res=await response.json();
-            console.log(res.msg);
-            setStudentData(res.msg);
+    //https://teststudentmernapp-backend.onrender.com/api <-render
+    const response=await fetch("http://localhost:3005/api/admin/show",{
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,  // Add token to Authorization header
+        }
+    });
+            
+    const res=await response.json();
+    console.log(res.msg);
+   
+    if(!Array.isArray(res.msg)){
+        //console.log(res.msg);
+        return alert(res.msg);
+    }  else{
+    setStudentData(res.msg);    
+    }      
+    
 }
 else{
-    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/showByEmailId/${sid}`);
+    const response=await fetch(`http://localhost:3005/api/admin/showByEmailId/${sid}`);
     const res=await response.json();
     console.log(res.msg);
     setStudentData(Array.isArray(res.msg)?res.msg:[res.msg]);
@@ -22,7 +41,7 @@ else{
 
 async function deleteStudent(email){
 //alert(email);
-const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/deleteByEmailId/${email}`,{
+const response=await fetch(`http://localhost:3005/api/admin/deleteByEmailId/${email}`,{
     method:'DELETE'
 });
     const res=await response.json();
@@ -33,7 +52,7 @@ async function updateStudent(email){
     alert('inside update');
     const newName=prompt('Enter Name to update');
    //https://teststudentmernapp-backend.onrender.com
-    const response=await fetch(`https://teststudentmernapp-backend.onrender.com/api/admin/updateByEmailId/${email}`,{
+    const response=await fetch(`http://localhost:3005/api/admin/updateByEmailId/${email}`,{
         method:'PATCH',
         body:JSON.stringify({newName}),
         headers:{'content-type':'application/json'}

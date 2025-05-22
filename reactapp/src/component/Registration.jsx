@@ -12,11 +12,16 @@ function Registration() {
 
      alert(sid+branch+section+name+email+password);
 
-        const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/register",{
-            method:"POST",
-            body:JSON.stringify({name,email,password,sid,branch,section}),
-            headers:{'Content-Type':'application/json'}
-        })
+        // const response=await fetch("https://teststudentmernapp-backend.onrender.com/api/register",{
+        //     method:"POST",
+        //     body:JSON.stringify({name,email,password,sid,branch,section}),
+        //     headers:{'Content-Type':'application/json'}
+        // })
+        const response=await fetch("http://localhost:3005/api/register",{
+          method:"POST",
+          body:JSON.stringify({name,email,password,sid,branch,section}),
+          headers:{'Content-Type':'application/json'}
+      })
         const res=await response.json();
         alert(res.msg);
     }
